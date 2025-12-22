@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
+use App\Models\Customer;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -135,43 +137,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // ADMIN
         Role::findByName('admin')->syncPermissions(Permission::all());
 
-        /*
-        |--------------------------------------------------------------------------
-        | Create Default Users
-        |--------------------------------------------------------------------------
-        */
 
-        // Admin
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@bank.test'],
-            [
-                'name' => 'System Admin',
-                'password' => Hash::make('password'),
-                'is_active' => true,
-            ]
-        );
-        $admin->assignRole('admin');
-
-        // Employee
-        $employee = User::firstOrCreate(
-            ['email' => 'employee@bank.test'],
-            [
-                'name' => 'Bank Employee',
-                'password' => Hash::make('password'),
-                'is_active' => true,
-            ]
-        );
-        $employee->assignRole('employee');
-
-        // Customer
-        $customer = User::firstOrCreate(
-            ['email' => 'customer@bank.test'],
-            [
-                'name' => 'Test Customer',
-                'password' => Hash::make('password'),
-                'is_active' => true,
-            ]
-        );
-        $customer->assignRole('customer');
     }
 }

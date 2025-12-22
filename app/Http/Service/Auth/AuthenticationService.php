@@ -44,10 +44,16 @@ class AuthenticationService
             ];
         }
 
+//        if ($user->is_active){
+//            return [
+//                'data' => null,
+//                'message' => 'already active',
+//                'code' => 400
+//            ];
+//        }
         $user->update([
             'is_active' => true
         ]);
-
         return [
             'code' => 200,
             'message' => 'Account activated successfully',
@@ -96,18 +102,16 @@ class AuthenticationService
                 'code' => 404
             ];
         }
-        $user = $account->customer->user;
 
-        if (!$user->is_active || ! Hash::check($dto->password, $user->password)) {
+        $user = $account->customer->user;
+        if (!$user->is_active || !Hash::check($dto->password, $user->password)) {
             return[
                 'data' => null,
                 'message' => 'invalid credentials',
                 'code' => 400
             ];
         }
-
         $token = $user->createToken('token')->plainTextToken;
-
         return [
             'data' => [
                 'token' => $token,

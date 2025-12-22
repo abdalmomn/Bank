@@ -12,7 +12,7 @@ class CustomerFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'           => User::inRandomOrder()->first()->id,
+            'user_id'           => User::pluck('id')->random(),
             'first_name'        => $this->faker->firstName(),
             'father_name'       => $this->faker->firstName(),
             'last_name'         => $this->faker->lastName(),

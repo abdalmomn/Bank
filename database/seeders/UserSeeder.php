@@ -2,30 +2,50 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // Admin
-        $admin = User::factory()->create([
-            'email' => 'admin@system.test',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@bank.test'],
+            [
+                'name' => 'System Admin',
+                'password' => Hash::make('12345678'),
+                'is_active' => true,
+                'profile' => ['type' => 'admin'],
+            ]
+        );
         $admin->assignRole('admin');
 
-        // Employees
-        User::factory(3)->create()->each(function ($user) use ($admin) {
-            $user->assignRole('employee');
-            $user->update(['created_by' => $admin->id]);
-        });
+        $employee = User::firstOrCreate(
+            ['email' => 'employee@bank.test'],
+            [
+                'name' => 'Bank Employee',
+                'password' => Hash::make('12345678'),
+                'is_active' => true,
+                'profile' => ['type' => 'employee'],
+            ]
+        );
+        $employee->assignRole('employee');
 
-        // Customers
-        User::factory(10)->create()->each(function ($user) {
-            $user->assignRole('customer');
-        });
+        $customerUser = User::firstOrCreate(
+            ['email' => 'customer@bank.test'],
+            [
+                'name' => 'Fixed Test Customer',
+                'password' => Hash::make('12345678'),
+                'phone' => '0999999999',
+                'is_active' => true,
+                'profile' => ['type' => 'customer'],
+            ]
+        );
+        $customerUser->assignRole('customer');
     }
 }
 

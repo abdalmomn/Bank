@@ -9,8 +9,8 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('reference')->unique();
-            $table->foreignId('from_account_id')->nullable()->constrained('accounts')->nullOnDelete();
-            $table->foreignId('to_account_id')->nullable()->constrained('accounts')->nullOnDelete();
+            $table->foreignId('from_account_id')->nullable()->constrained('accounts');
+            $table->foreignId('to_account_id')->nullable()->constrained('accounts');
             $table->decimal('amount', 20, 4);
             $table->string('currency', 3)->default('USD');
             $table->enum('type', ['deposit','withdraw','transfer','fee','interest','loan_disbursement','loan_repayment']);

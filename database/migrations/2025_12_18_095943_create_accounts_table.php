@@ -10,7 +10,8 @@ return new class extends Migration {
             $table->id();
             $table->string('account_number')->unique();
             $table->foreignId('account_type_id')->constrained('account_types')->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->cascadeOnDelete();
+
             $table->foreignId('parent_id')->nullable()->constrained('accounts')->cascadeOnDelete();
 
             $table->decimal('balance', 20, 4)->default(0); // cached balance

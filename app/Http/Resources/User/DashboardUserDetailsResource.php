@@ -6,9 +6,8 @@ use App\Http\Resources\Account\AccountResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserDetailsResource extends JsonResource
+class DashboardUserDetailsResource extends JsonResource
 {
-    // App\Http\Resources\User\UserDetailsResource.php
     public function toArray(Request $request): array
     {
         return [
@@ -18,10 +17,14 @@ class UserDetailsResource extends JsonResource
             'phone'     => $this->phone,
             'is_active' => $this->is_active,
             'profile'   => $this->profile,
+
             'account'   => $this->when(
                 isset($this->additional['account']),
                 new AccountResource($this->additional['account'] ?? null)
             ),
-            ];
+
+            'roles' => $this->roles->map(fn($role) => new RoleResource($role)),
+        ];
     }
 }
+
