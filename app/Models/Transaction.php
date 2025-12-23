@@ -10,11 +10,8 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'reference',
         'from_account_id',
         'to_account_id',
@@ -33,12 +30,6 @@ class Transaction extends Model
         'metadata' => 'array',
     ];
 
-    protected static function booted()
-    {
-        static::creating(function ($model) {
-            $model->id ??= (string) Str::uuid();
-        });
-    }
 
     /* ================= Relations ================= */
 

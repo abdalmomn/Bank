@@ -5,6 +5,7 @@ use App\Http\Controllers\App\Notifications\AppNotificationController;
 use App\Http\Controllers\Dashboard\Accounts\CostumerAccountController;
 use App\Http\Controllers\Dashboard\Accounts\EmployeeAccountController;
 use App\Http\Controllers\Dashboard\Auth\DashboardAuthController;
+use App\Http\Controllers\Dashboard\Transactions\EmployeeCashTransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,12 +20,23 @@ Route::controller(AppNotificationController::class)
         Route::post('/mark_as_read/{notificationId}', 'mark_as_read');
     });
 
-Route::prefix('app/auth')->group(function () {
+Route::prefix('app')->group(function () {
+
+Route::prefix('auth')->group(function () {
     Route::post('activate-account', [AuthenticationAppController::class, 'activateAccount']);
     Route::post('reset-password', [AuthenticationAppController::class, 'resetPassword']);
     Route::post('login', [AuthenticationAppController::class, 'login']);
 
     Route::middleware('auth:sanctum')->delete('logout', [AuthenticationAppController::class, 'logout']);
+
+    });
+    Route::middleware(['auth:sanctum'])
+        ->controller(EmployeeCashTransactionController::class)
+        ->prefix('/cash')
+        ->group(function () {
+
+            Route::post('transfer', 'transfer');
+        });
 });
 
 
@@ -52,6 +64,16 @@ Route::prefix('dashboard/employee')->group(function(){
     Route::delete('/customers/{userId}','destroy');
 
     });
+
+
+    Route::middleware(['auth:sanctum'])
+        ->controller(EmployeeCashTransactionController::class)
+        ->prefix('/cash')
+        ->group(function () {
+            Route::post('deposit','deposit');
+            Route::post('withdraw', 'withdraw');
+            Route::post('transfer', 'transfer');
+        });
 
 });
 

@@ -13,7 +13,6 @@ class LedgerEntry extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id',
         'transaction_id',
         'account_id',
         'entry_type',

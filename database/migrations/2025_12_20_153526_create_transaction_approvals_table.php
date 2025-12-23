@@ -8,8 +8,8 @@ return new class extends Migration {
     {
         Schema::create('transaction_approvals', function (Blueprint $table) {
             $table->id();
-            $table->uuid('transaction_id')->index();
-            $table->foreignId('approver_id')->constrained('users');
+            $table->foreignId('transaction_id')->constrained('transactions');
+            $table->foreignId('approver_id')->nullable()->constrained('users');
             $table->enum('decision', ['approved','rejected','pending'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();

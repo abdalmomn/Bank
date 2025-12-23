@@ -18,7 +18,6 @@ class TransactionFactory extends Factory
         $to   = Account::where('id', '!=', $from->id)->inRandomOrder()->first();
 
         return [
-            'id'                 => (string) Str::uuid(),
             'reference'          => strtoupper(Str::random(12)),
             'from_account_id'    => $from?->id,
             'to_account_id'      => $to?->id,

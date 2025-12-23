@@ -14,7 +14,6 @@ class LedgerEntryFactory extends Factory
     public function definition()
     {
         return [
-            'id'             => (string) Str::uuid(),
             'transaction_id' => null,
             'account_id'     => Account::inRandomOrder()->first()->id,
             'entry_type'     => $this->faker->randomElement(['debit','credit']),

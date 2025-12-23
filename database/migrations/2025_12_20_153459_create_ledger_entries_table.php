@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('ledger_entries', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->uuid('transaction_id')->nullable()->index(); // links to transactions.id (if any)
             $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
             $table->enum('entry_type', ['debit','credit']); // debit decreases/increases depending on account nature

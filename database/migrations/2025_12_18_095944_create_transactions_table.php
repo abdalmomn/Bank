@@ -7,7 +7,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('reference')->unique();
             $table->foreignId('from_account_id')->nullable()->constrained('accounts');
             $table->foreignId('to_account_id')->nullable()->constrained('accounts');
