@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->enum('status', ['pending','processing','completed','failed','rejected'])->default('pending');
             $table->foreignId('initiator_id')->nullable()->constrained('users')->nullOnDelete();
             $table->boolean('requires_approval')->default(false);
+            $table->float('fees')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
         });

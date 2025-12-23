@@ -10,6 +10,7 @@ use App\Models\LedgerEntry;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use App\Domain\Transactions\States\TransactionStateFactory;
+use App\Domain\Transactions\Fees\FeeStrategyFactory;
 
 class CashTransactionService
 {
@@ -38,6 +39,13 @@ class CashTransactionService
                     'type' => 'deposit',
                     'initiator_id' => auth()->id(),
                 ]);
+                $feeStrategy = FeeStrategyFactory::make('deposit');
+                $fee = $feeStrategy->calculate($dto->amount, $transaction);
+
+                $transaction->update([
+                    'fee' => $fee,
+                    'net_amount' => $dto->amount - $fee,
+                ]);
 
                 $state = TransactionStateFactory::make($dto->amount);
                 $state->apply($transaction, $dto->amount);
@@ -46,15 +54,14 @@ class CashTransactionService
                 LedgerEntry::create([
                     'transaction_id' => $transaction->id,
                     'account_id' => $account->id,
-                    'entry_type' => 'credit',
-                    'amount' => $dto->amount,
+                    'entry_type' => 'debit',
+                    'amount' => $fee,
                     'currency' => $account->currency,
                     'narration' => $dto->narration ?? 'Cash deposit',
                 ]);
 
-                // إذا المعاملة فورية، حدث الرصيد
                 if (!$transaction->requires_approval) {
-                    $account->increment('balance', $dto->amount);
+                    $account->increment('balance', $dto->amount - $fee);
                 }
 
                 $message = $transaction->requires_approval
@@ -114,6 +121,19 @@ class CashTransactionService
                 'initiator_id' => auth()->id(),
             ]);
 
+            $feeStrategy = FeeStrategyFactory::make('withdraw');
+            $fee = $feeStrategy->calculate($dto->amount, $transaction);
+
+            $totalDebit = $dto->amount + $fee;
+
+            if ($account->balance < $totalDebit) {
+                return [
+                    'data' => null,
+                    'message' => 'Insufficient balance including fees',
+                    'code' => 400
+                ];
+            }
+
             $state = TransactionStateFactory::make($dto->amount);
             $state->apply($transaction, $dto->amount);
 
@@ -127,10 +147,11 @@ class CashTransactionService
             ]);
 
             if (!$transaction->requires_approval) {
-                $account->decrement('balance', $dto->amount);
+                $account->decrement('balance', $totalDebit);
             }
 
-            $message = $transaction->requires_approval
+
+                $message = $transaction->requires_approval
                 ? 'Withdrawal is pending for approval'
                 : 'Withdrawal completed successfully';
 
@@ -194,6 +215,19 @@ class CashTransactionService
                 'type' => 'transfer',
                 'initiator_id' => auth()->id(),
             ]);
+                $feeStrategy = FeeStrategyFactory::make('transfer');
+                $fee = $feeStrategy->calculate($dto->amount, $transaction);
+
+                $totalDebit = $dto->amount + $fee;
+
+                if ($fromAccount->balance < $totalDebit) {
+                    return [
+                        'data' => null,
+                        'message' => 'Insufficient balance including fees',
+                        'code' => 400
+                    ];
+                }
+
 
             $state = TransactionStateFactory::make($dto->amount);
             $state->apply($transaction, $dto->amount);
@@ -219,13 +253,14 @@ class CashTransactionService
             ]);
 
             if (!$transaction->requires_approval) {
-                $fromAccount->decrement('balance', $dto->amount);
+                $fromAccount->decrement('balance', $totalDebit);
                 $toAccount->increment('balance', $dto->amount);
             }
 
+
             $message = $transaction->requires_approval
-                ? 'Transfer is pending for approval'
-                : 'Transfer completed successfully';
+            ? 'Transfer is pending for approval'
+            : 'Transfer completed successfully';
 
             return [
                 'data' => $transaction,

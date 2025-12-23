@@ -18,6 +18,7 @@ class Transaction extends Model
         'amount',
         'currency',
         'type',
+        'fees',
         'status',
         'initiator_id',
         'requires_approval',
