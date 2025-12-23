@@ -50,16 +50,6 @@ class AccountService
                 'expires_at' => now()->addMinutes(15)
             ]);
             event(new SendEmailEvent($user, $account, $tempPassword,$otp));
-            event(new SendNotificationEvent(
-                user: $user,
-                title: 'Account Created',
-                message: 'Your bank account has been created successfully',
-                level: 'success',
-                notifiable: $account,
-                data: [
-                    'account_number' => $account->account_number,
-                ]
-            ));
 
             return [
                 'data' => $user , $customer, $account,

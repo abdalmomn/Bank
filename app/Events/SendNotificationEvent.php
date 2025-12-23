@@ -22,8 +22,8 @@ class SendNotificationEvent
         $title,
         $message,
         $level = 'info',
-        ?object $notifiable = null,
-        array $data = []
+        $notifiable = null,
+        $data = []
     ) {
         $this->user = $user;
         $this->title = $title;

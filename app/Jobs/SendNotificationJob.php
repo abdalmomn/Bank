@@ -39,7 +39,7 @@ class SendNotificationJob implements ShouldQueue
         $push->sendToUserDevices(
             user: $user,
             title: $this->title,
-            message: $this->message,
+            body: $this->message,
             data: $this->data
         );
     }

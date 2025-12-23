@@ -23,11 +23,11 @@ class NotificationService
         $title,
         $message,
         $type = 'info',
-        ?object $notifiable = null,
-        array $extraData = []
+        $notifiable = null,
+        $extraData = []
     ) {
         $record = Notification::create([
-            'type' => 'app', // أو App\\Notifications\\Something
+            'type' => 'app',
             'notifiable_type' => User::class,
             'notifiable_id' => $user->id,
             'data' => array_merge([
