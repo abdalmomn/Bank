@@ -18,7 +18,7 @@ class UserLightResource extends JsonResource
         return [
             'account_number' => $account?->account_number,
             'name'     => $this->name,
-            'email'      => $this->email,
+            'balance'      => $account?->balance,
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Service\Banking;
 
 use App\Events\SendEmailEvent;
+use App\Events\SendNotificationEvent;
 use App\Http\DTO\Account\UserDTO;
 use App\Models\OtpCode;
 use App\Models\User;
@@ -49,6 +50,16 @@ class AccountService
                 'expires_at' => now()->addMinutes(15)
             ]);
             event(new SendEmailEvent($user, $account, $tempPassword,$otp));
+            event(new SendNotificationEvent(
+                user: $user,
+                title: 'Account Created',
+                message: 'Your bank account has been created successfully',
+                level: 'success',
+                notifiable: $account,
+                data: [
+                    'account_number' => $account->account_number,
+                ]
+            ));
 
             return [
                 'data' => $user , $customer, $account,
@@ -71,7 +82,8 @@ class AccountService
         $account = Account::create([
             'account_number'  => 'ACC'.rand(100000,999999),
             'account_type_id' => $dto->account_type_id,
-            'currency'        => 'SP',
+            'user_id' => $user->id,
+            'currency'        => 'SYP',
         ]);
 
         return [
@@ -97,7 +109,7 @@ class AccountService
 
     public function show_customer_details( $userId)
     {
-        $user = User::query()->with('customer.accounts')->find($userId);
+        $user = User::query()->with('customer.accounts.type')->find($userId);
         if (!$user) {
             return [
                 'data' => null,
@@ -105,7 +117,6 @@ class AccountService
                 'code' => 404
             ];
         }
-
         return [
             'data' => $user,
             'message' => 'customer details retrieved successfully',
@@ -184,7 +195,8 @@ class AccountService
 
     public function show_all_employees()
     {
-        $employees = User::role('employee')->with('roles')->get();
+        $employees = User::role('employee')->with('customer.accounts', 'roles')->get();
+
 
         return [
             'data' => $employees,
@@ -195,7 +207,9 @@ class AccountService
 
     public function show_employee_details($userId)
     {
-        $user = User::role('employee')->with('roles', 'customer.accounts')->find($userId);
+        $user = User::role('employee')
+            ->with(['roles', 'accounts.type'])
+            ->find($userId);
 
         if (!$user) {
             return [
@@ -211,6 +225,7 @@ class AccountService
             'code' => 200
         ];
     }
+
 
     public function update_employee($userId, UserDTO $dto)
     {

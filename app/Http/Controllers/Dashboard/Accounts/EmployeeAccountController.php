@@ -66,7 +66,8 @@ class EmployeeAccountController extends Controller
 
     public function update( $userId, EmployeeRequest $request)
     {
-        $data = $this->service->update_employee($userId, $request->validated());
+        $validated_data = UserDTO::fromArray($request->validated());
+        $data = $this->service->update_employee($userId, $validated_data);
         return response()->json([
             'data' => $data['data'] ? new UserDetailsResource($data['data']) : null,
             'message' => $data['message'],

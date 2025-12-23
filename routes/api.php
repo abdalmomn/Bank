@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\App\Auth\AuthenticationAppController;
+use App\Http\Controllers\App\Notifications\AppNotificationController;
 use App\Http\Controllers\Dashboard\Accounts\CostumerAccountController;
 use App\Http\Controllers\Dashboard\Accounts\EmployeeAccountController;
 use App\Http\Controllers\Dashboard\Auth\DashboardAuthController;
@@ -10,6 +11,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::controller(AppNotificationController::class)
+    ->middleware('auth:sanctum')
+    ->group(function(){
+        Route::post('/deviceToken', 'registerDeviceToken');
+        Route::post('/mark_as_read/{notificationId}', 'mark_as_read');
+    });
 
 Route::prefix('app/auth')->group(function () {
     Route::post('activate-account', [AuthenticationAppController::class, 'activateAccount']);
@@ -44,7 +52,11 @@ Route::prefix('dashboard/employee')->group(function(){
     Route::delete('/customers/{userId}','destroy');
 
     });
+
 });
+
+
+
 
 
 

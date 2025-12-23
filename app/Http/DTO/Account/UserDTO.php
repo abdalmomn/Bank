@@ -8,7 +8,7 @@ class UserDTO
         public string  $name,
         public string  $email,
         public ?string $phone,
-        public string $password,
+        public ?string $password,
         public string $account_type_id,
         public ?string $profile = null,
 
@@ -20,7 +20,7 @@ class UserDTO
             $data['name'],
             $data['email'],
             $data['phone'] ?? null,
-            $data['password'],
+            $data['password'] ?? null,
             $data['account_type_id'],
             $data['profile'] ?? null
         );

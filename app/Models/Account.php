@@ -15,6 +15,7 @@ class Account extends Model
         'account_type_id',
         'customer_id',
         'parent_id',
+        'user_id',
         'balance',
         'currency',
         'state',
@@ -26,6 +27,10 @@ class Account extends Model
         'metadata' => 'array',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function customer()
     {
         return $this->belongsTo(Customer::class);

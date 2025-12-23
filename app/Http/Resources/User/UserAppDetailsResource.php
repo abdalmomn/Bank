@@ -32,10 +32,10 @@ class UserAppDetailsResource extends JsonResource
                 'monthly_expenses' => $this->customer?->monthly_expenses,
             ],
 
-            'account'   => $this->when(
-                isset($this->additional['account']),
-                new AccountResource($this->additional['account'] ?? null)
+            'accounts' => AccountResource::collection(
+                $this->customer?->accounts ?? collect()
             ),
+
         ];
     }
 }

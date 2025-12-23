@@ -31,6 +31,16 @@ class User extends Authenticatable
 
     /* ========= Relations ========= */
 
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
     public function customer()
     {
         return $this->hasOne(Customer::class);

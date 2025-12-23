@@ -18,9 +18,8 @@ class UserDetailsResource extends JsonResource
             'phone'     => $this->phone,
             'is_active' => $this->is_active,
             'profile'   => $this->profile,
-            'account'   => $this->when(
-                isset($this->additional['account']),
-                new AccountResource($this->additional['account'] ?? null)
+            'accounts' => AccountResource::collection(
+                $this->accounts ?? collect()
             ),
             ];
     }
