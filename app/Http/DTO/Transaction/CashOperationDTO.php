@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\DTO\Account;
+namespace App\Http\DTO\Transaction;
 
 class CashOperationDTO
 {

@@ -2,15 +2,14 @@
 
 namespace App\Http\Service\Banking;
 
-use App\Domain\Transactions\States\PendingState;
-use App\Http\DTO\Account\CashOperationDTO;
-use App\Http\DTO\Account\TransferDTO;
+use App\Domain\Transactions\Fees\FeeStrategyFactory;
+use App\Domain\Transactions\States\TransactionStateFactory;
+use App\Http\DTO\Transaction\CashOperationDTO;
+use App\Http\DTO\Transaction\TransferDTO;
 use App\Models\Account;
 use App\Models\LedgerEntry;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
-use App\Domain\Transactions\States\TransactionStateFactory;
-use App\Domain\Transactions\Fees\FeeStrategyFactory;
 
 class CashTransactionService
 {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\Accounts\CostumerAccountController;
 use App\Http\Controllers\Dashboard\Accounts\EmployeeAccountController;
 use App\Http\Controllers\Dashboard\Auth\DashboardAuthController;
 use App\Http\Controllers\Dashboard\Transactions\EmployeeCashTransactionController;
+use App\Http\Controllers\Dashboard\Transactions\TransactionApprovalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -103,4 +104,7 @@ Route::prefix('dashboard/admin')->group(function(){
 
         Route::delete('/employees/{userId}', 'destroy');
     });
+    Route::post('approve-transaction/{transactionId}', [TransactionApprovalController::class, 'approve'])
+        ->middleware('auth:sanctum');
+
 });

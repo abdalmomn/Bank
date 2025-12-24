@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Dashboard\Transactions;
 
 use App\Http\Controllers\Controller;
-use App\Http\DTO\Account\CashOperationDTO;
-use App\Http\DTO\Account\TransferDTO;
+use App\Http\DTO\Transaction\CashOperationDTO;
+use App\Http\DTO\Transaction\TransferDTO;
 use App\Http\Requests\Transactions\DepositRequest;
 use App\Http\Requests\Transactions\TransferRequest;
 use App\Http\Requests\Transactions\WithdrawRequest;
@@ -74,5 +74,6 @@ class EmployeeCashTransactionController extends Controller
             'data' => new TransactionResource($data['data']),
             'message' => $data['message'],
             'code' => $data['code']
-        ]);    }
+        ]);
+    }
 }
